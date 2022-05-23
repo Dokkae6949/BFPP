@@ -1,13 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <errno.h>
 
 #define MEMORY_SIZE 30000
 #define SOURCE_SIZE 30000
 
-char memory[MEMORY_SIZE] = {0};
-char source[SOURCE_SIZE];
-char *src = source;
-char *mem = memory;
+char *memory; char *mem;
+char *source; char *src;
 char inFunc = 0;
 
 
@@ -106,6 +105,15 @@ int main(int argc, char *argv[])
             printf("File '%s' doesn't exist!\n", argv[1]);
             return 0;
         }
+
+        fseek(file, 0, SEEK_END); // seek to end of file
+        size_t size = ftell(file); // get current file pointer
+        fseek(file, 0, SEEK_SET); // seek back to beginning of file
+
+        source = (char*)calloc(size, sizeof(char));
+        src = source;
+        memory = (char*)calloc(size*2, sizeof(char));
+        mem = memory;
 
         fread(source, 1, SOURCE_SIZE, file);
         fclose(file);
